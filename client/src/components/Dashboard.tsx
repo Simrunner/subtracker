@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { SubscriptionManager } from './SubscriptionManager';
+import { Recommendations } from './Recommendations';
 
 interface Analytics {
   totalSubscriptions: number;
@@ -14,7 +15,7 @@ interface DashboardProps {
 }
 
 export const Dashboard: React.FC<DashboardProps> = ({ token, onLogout }) => {
-  const [showManager, setShowManager] = useState(false);
+  const [activeTab, setActiveTab] = useState<'analytics' | 'manager' | 'recommendations'>('analytics');
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -63,38 +64,31 @@ export const Dashboard: React.FC<DashboardProps> = ({ token, onLogout }) => {
         </button>
       </div>
 
-      <div style={{ marginBottom: '20px', borderBottom: '2px solid #e5e7eb' }}>
-        <button
-          onClick={() => setShowManager(false)}
-          style={{
-            padding: '10px 20px',
-            backgroundColor: showManager ? 'transparent' : '#2563eb',
-            color: showManager ? '#666' : 'white',
-            border: 'none',
-            borderBottom: showManager ? 'none' : '2px solid #2563eb',
-            cursor: 'pointer',
-            marginRight: '10px',
-          }}
-        >
-          Analytics
-        </button>
-        <button
-          onClick={() => setShowManager(true)}
-          style={{
-            padding: '10px 20px',
-            backgroundColor: showManager ? '#2563eb' : 'transparent',
-            color: showManager ? 'white' : '#666',
-            border: 'none',
-            borderBottom: showManager ? '2px solid #2563eb' : 'none',
-            cursor: 'pointer',
-          }}
-        >
-          Manage Subscriptions
-        </button>
+      <div style={{ marginBottom: '20px', borderBottom: '2px solid #e5e7eb', display: 'flex', gap: '0' }}>
+        {['analytics', 'manager', 'recommendations'].map((tab) => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab as 'analytics' | 'manager' | 'recommendations')}
+            style={{
+              padding: '10px 20px',
+              backgroundColor: activeTab === tab ? '#2563eb' : 'transparent',
+              color: activeTab === tab ? 'white' : '#666',
+              border: 'none',
+              borderBottom: activeTab === tab ? '2px solid #2563eb' : 'none',
+              cursor: 'pointer',
+              marginRight: '0',
+              textTransform: 'capitalize',
+            }}
+          >
+            {tab === 'analytics' ? 'Analytics' : tab === 'manager' ? 'Subscriptions' : 'Recommendations'}
+          </button>
+        ))}
       </div>
 
-      {showManager ? (
+      {activeTab === 'manager' ? (
         <SubscriptionManager token={token} />
+      ) : activeTab === 'recommendations' ? (
+        <Recommendations token={token} />
       ) : (
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px', marginBottom: '30px' }}>
