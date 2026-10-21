@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { SubscriptionManager } from './SubscriptionManager';
 
 interface Analytics {
   totalSubscriptions: number;
@@ -13,6 +14,7 @@ interface DashboardProps {
 }
 
 export const Dashboard: React.FC<DashboardProps> = ({ token, onLogout }) => {
+  const [showManager, setShowManager] = useState(false);
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -60,6 +62,40 @@ export const Dashboard: React.FC<DashboardProps> = ({ token, onLogout }) => {
           Logout
         </button>
       </div>
+
+      <div style={{ marginBottom: '20px', borderBottom: '2px solid #e5e7eb' }}>
+        <button
+          onClick={() => setShowManager(false)}
+          style={{
+            padding: '10px 20px',
+            backgroundColor: showManager ? 'transparent' : '#2563eb',
+            color: showManager ? '#666' : 'white',
+            border: 'none',
+            borderBottom: showManager ? 'none' : '2px solid #2563eb',
+            cursor: 'pointer',
+            marginRight: '10px',
+          }}
+        >
+          Analytics
+        </button>
+        <button
+          onClick={() => setShowManager(true)}
+          style={{
+            padding: '10px 20px',
+            backgroundColor: showManager ? '#2563eb' : 'transparent',
+            color: showManager ? 'white' : '#666',
+            border: 'none',
+            borderBottom: showManager ? '2px solid #2563eb' : 'none',
+            cursor: 'pointer',
+          }}
+        >
+          Manage Subscriptions
+        </button>
+      </div>
+
+      {showManager ? (
+        <SubscriptionManager token={token} />
+      ) : (
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px', marginBottom: '30px' }}>
         <div style={{ padding: '20px', border: '1px solid #ddd', borderRadius: '8px' }}>
@@ -123,6 +159,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ token, onLogout }) => {
             ))}
           </div>
         </div>
+      )}
       )}
     </div>
   );
