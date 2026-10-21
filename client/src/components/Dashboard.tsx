@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { SubscriptionManager } from './SubscriptionManager';
 import { Recommendations } from './Recommendations';
+import { Settings } from './Settings';
 
 interface Analytics {
   totalSubscriptions: number;
@@ -15,7 +16,7 @@ interface DashboardProps {
 }
 
 export const Dashboard: React.FC<DashboardProps> = ({ token, onLogout }) => {
-  const [activeTab, setActiveTab] = useState<'analytics' | 'manager' | 'recommendations'>('analytics');
+  const [activeTab, setActiveTab] = useState<'analytics' | 'manager' | 'recommendations' | 'settings'>('analytics');
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -65,10 +66,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ token, onLogout }) => {
       </div>
 
       <div style={{ marginBottom: '20px', borderBottom: '2px solid #e5e7eb', display: 'flex', gap: '0' }}>
-        {['analytics', 'manager', 'recommendations'].map((tab) => (
+        {['analytics', 'manager', 'recommendations', 'settings'].map((tab) => (
           <button
             key={tab}
-            onClick={() => setActiveTab(tab as 'analytics' | 'manager' | 'recommendations')}
+            onClick={() => setActiveTab(tab as 'analytics' | 'manager' | 'recommendations' | 'settings')}
             style={{
               padding: '10px 20px',
               backgroundColor: activeTab === tab ? '#2563eb' : 'transparent',
@@ -80,7 +81,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ token, onLogout }) => {
               textTransform: 'capitalize',
             }}
           >
-            {tab === 'analytics' ? 'Analytics' : tab === 'manager' ? 'Subscriptions' : 'Recommendations'}
+            {tab === 'analytics' ? 'Analytics' : tab === 'manager' ? 'Subscriptions' : tab === 'recommendations' ? 'Recommendations' : 'Settings'}
           </button>
         ))}
       </div>
@@ -89,6 +90,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ token, onLogout }) => {
         <SubscriptionManager token={token} />
       ) : activeTab === 'recommendations' ? (
         <Recommendations token={token} />
+      ) : activeTab === 'settings' ? (
+        <Settings token={token} onLogout={onLogout} />
       ) : (
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px', marginBottom: '30px' }}>

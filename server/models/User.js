@@ -8,6 +8,8 @@ const userSchema = new mongoose.Schema({
   lastName: String,
   currency: { type: String, default: 'USD' },
   timezone: { type: String, default: 'UTC' },
+  emailNotifications: { type: Boolean, default: true },
+  alertDaysBefore: { type: Number, default: 3 },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });

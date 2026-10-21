@@ -6,6 +6,7 @@ require('dotenv').config();
 const subscriptionsRouter = require('./routes/subscriptions');
 const authRouter = require('./routes/auth');
 const recommendationsRouter = require('./routes/recommendations');
+const userRouter = require('./routes/user');
 const authMiddleware = require('./middleware/auth');
 
 const app = express();
@@ -26,6 +27,7 @@ app.get('/api/health', (req, res) => {
 });
 
 app.use('/api/auth', authRouter);
+app.use('/api/user', authMiddleware, userRouter);
 app.use('/api/subscriptions', authMiddleware, subscriptionsRouter);
 app.use('/api/recommendations', authMiddleware, recommendationsRouter);
 
