@@ -2,7 +2,7 @@ const Subscription = require('../models/Subscription');
 
 exports.getAllSubscriptions = async (req, res) => {
   try {
-    const subscriptions = await Subscription.find({ userId: req.userId });
+    const subscriptions = await Subscription.find({ supabase_user_id: req.userId });
     res.json(subscriptions);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -14,7 +14,7 @@ exports.createSubscription = async (req, res) => {
     const { name, cost, billingCycle, category, renewalDate, notes } = req.body;
 
     const subscription = new Subscription({
-      userId: req.userId,
+      supabase_user_id: req.userId,
       name,
       cost,
       billingCycle,
@@ -34,7 +34,7 @@ exports.getSubscriptionById = async (req, res) => {
   try {
     const subscription = await Subscription.findById(req.params.id);
 
-    if (!subscription || subscription.userId.toString() !== req.userId) {
+    if (!subscription || subscription.supabase_user_id !== req.userId) {
       return res.status(404).json({ error: 'Subscription not found' });
     }
 
@@ -48,7 +48,7 @@ exports.updateSubscription = async (req, res) => {
   try {
     const subscription = await Subscription.findById(req.params.id);
 
-    if (!subscription || subscription.userId.toString() !== req.userId) {
+    if (!subscription || subscription.supabase_user_id !== req.userId) {
       return res.status(404).json({ error: 'Subscription not found' });
     }
 
@@ -66,7 +66,7 @@ exports.deleteSubscription = async (req, res) => {
   try {
     const subscription = await Subscription.findById(req.params.id);
 
-    if (!subscription || subscription.userId.toString() !== req.userId) {
+    if (!subscription || subscription.supabase_user_id !== req.userId) {
       return res.status(404).json({ error: 'Subscription not found' });
     }
 
@@ -79,7 +79,7 @@ exports.deleteSubscription = async (req, res) => {
 
 exports.getAnalytics = async (req, res) => {
   try {
-    const subscriptions = await Subscription.find({ userId: req.userId, status: 'active' });
+    const subscriptions = await Subscription.find({ supabase_user_id: req.userId, status: 'active' });
 
     const totalMonthlyCost = subscriptions.reduce((sum, sub) => {
       const cycles = { daily: 365, weekly: 52, monthly: 12, quarterly: 4, yearly: 1 };

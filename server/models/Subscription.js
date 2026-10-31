@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const subscriptionSchema = new mongoose.Schema({
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  supabase_user_id: { type: String, required: true, index: true },
   name: { type: String, required: true },
   cost: { type: Number, required: true },
   billingCycle: { type: String, enum: ['daily', 'weekly', 'monthly', 'quarterly', 'yearly'], required: true },

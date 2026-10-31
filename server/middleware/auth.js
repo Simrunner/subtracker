@@ -8,8 +8,17 @@ const authMiddleware = (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret');
-    req.userId = decoded.userId;
+    const supabasePublicKey = process.env.SUPABASE_JWT_SECRET;
+    if (!supabasePublicKey) {
+      return res.status(500).json({ error: 'Supabase JWT secret not configured' });
+    }
+
+    const decoded = jwt.verify(token, supabasePublicKey, {
+      algorithms: ['HS256'],
+    });
+
+    req.userId = decoded.sub;
+    req.userEmail = decoded.email;
     next();
   } catch (error) {
     res.status(401).json({ error: 'Invalid token' });
